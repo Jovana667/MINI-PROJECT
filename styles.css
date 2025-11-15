@@ -118,3 +118,9 @@ header .container {
 }
 
 /* Shop Section */
+
+/* remove in sec */
+
+.hidden {
+  display: none !important;
+}
