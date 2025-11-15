@@ -85,3 +85,36 @@ header .container {
   font-size: 14px;
   text-align: center;
 }
+
+/* Buttons */
+.btn-primary {
+    width: 100%;
+    background-color: red;
+    color: white;
+    border: none;
+    padding: 12px;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.btn-primary:hover {
+    background-color: pink;
+}
+
+.btn-secondary {
+    background-color: grey;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.btn-secondary:hover {
+    background-color: darkgrey;
+}
+
+/* Shop Section */
