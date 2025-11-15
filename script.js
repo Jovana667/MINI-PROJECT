@@ -76,8 +76,42 @@ window.addEventListener("click", (e) => {
     if (e.target === cartModal) closeCart();
     if (e.target === checkoutModal) closeCheckout();
 })
-
 });
+
+// login handler
+function handleLogin() {
+    console.log("Login button clicked!"); //debug log
+
+    const email = emailInput.value.trim();
+    const password = passwordInput.value.trim();
+
+    console.log("Email:", email); //debug log
+    console.log("Password:", password ? "***" : "(empty)"); //debug log
+
+    if (!email || !password) {
+        showAuthMessage("Please enter both email and password", "error");
+        return;
+    }
+
+    if (!email.includes("@")) {
+        showAuthMessage("Please enter a valid email address", "error");
+        return;        
+}
+
+// simple auth for demo
+currentUser = { email: email};
+showAuthMessage("Login successful!", "success");
+
+console.log("Login successful, switching to shop view"); //debug log
+
+setTimeout(() => {
+    authSection.classList.add("hidden");
+    shopSection.classList.remove("hidden");
+    displayProducts(allProducts);
+}, 1000);
+}
+
+
 
 
 
