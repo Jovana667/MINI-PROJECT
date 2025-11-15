@@ -60,21 +60,37 @@
     <div id="cartModal" class="modal hidden">
       <div class="modal-content">
         <span class="close">&times;</span>
-      <h2>Shopping Cart</h2>
-      <div id="cartItems"></div>
-      <div class="cart-total">
-        <h3>Total: $<span id="cartTotal">0.00</span></h3>
-      <button id="checkoutBtn" class="btn-primary">
-        Proceed to Checkout
-      </button>
+        <h2>Shopping Cart</h2>
+        <div id="cartItems"></div>
+        <div class="cart-total">
+          <h3>Total: $<span id="cartTotal">0.00</span></h3>
+          <button id="checkoutBtn" class="btn-primary">
+            Proceed to Checkout
+          </button>
+        </div>
+      </div>
     </div>
-  </div>
-  </div>
 
     <!-- checkout modal -->
-    </div>div>
-      <h2>Checkout</h2>
-      <button>Complete Order</button>
+    <div id="checkoutModal" class="modal-hidden">
+      <div class="modal-content">
+        <span class="close-checkout">&times;</span>
+        <h2>Checkout</h2>
+        <div class="checkout-form">
+          <input type="text" id="nameInput" placeholder="Full Name" required />
+          <input type="text" id="addressInput" placeholder="Address" required />
+          <input
+            type="text"
+            id="cardInput"
+            placeholder="Card Number"
+            required
+          />
+          <button id="completeOrderBtn" class="btn-primary">
+            Complete Order
+          </button>
+        </div>
+        <p class="checkout-message" id="checkoutMessage"></p>
+      </div>
     </div>
 
     <script src="script.js"></script>
