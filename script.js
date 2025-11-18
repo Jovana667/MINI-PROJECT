@@ -258,3 +258,38 @@ function showNotification(message) {
         notification.remove();
     }, 2000);
 }
+
+// open cart modal
+function openCart() {
+  if (cart.length === 0) {
+    showNotification("Your cart is empty!");
+    return;
+  }
+
+  disaplyCartItems();
+  cartModal.classList.add("active");
+}
+
+// close cart modal
+function closeCart() {
+  cartModal.classList.remove("active");
+}
+
+// display cart items
+function displayCartItems() {
+  cartItems.innerHTML = "";
+
+  cart.forEach((item) => {
+    const cartItem = document.createElement("div");
+    cartItem.className = "cart-item";
+    cartItem.innerHTML = `
+    <div class=cart-item-info">
+    <div class="cart-item-name>${item.name} (x${item.quantity})</div>
+    <div class="cart-item-price">$${(item.price * item.quantity).toFixed(2)}</div>
+    <button class="remove-btn" onclick="removeFromCart(${item.id})">Remove</button>`;
+    
+    cartItems.appendChild(cartItem);
+  });
+
+  updateCartTotal();
+}
