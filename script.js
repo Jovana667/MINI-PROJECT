@@ -214,7 +214,7 @@ function handleSearch() {
 
 // add to cart
 function addToCart(productId) {
-    const product = products.find((p) = > p.id == productId);
+    const product = products.find((p) => p.id == productId);
 
     if (!product) return;
 
@@ -305,4 +305,21 @@ function removeFromCart(productId) {
 }
 
 displayCartItems();
+}
+
+// update cart total
+function updateCartTotal() {
+  const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  cartTotal.textContent = total.toFixed(2);
+}
+
+// open chekout
+function openCheckout(){
+  closeCart();
+  checkoutModal.classList.add("active");    
+}
+
+// close checkout
+function closeCheckout() {
+  checkoutModal.classList.remove("active"); 
 }
