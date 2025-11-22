@@ -232,6 +232,44 @@ main {
   position: relative;
 }
 
+.close,
+.close-checkout {
+  position: absolute;
+  right: 15px;
+  top: 10px;
+  font-size: 28px;
+  font-weight: bold;
+  cursor: pointer;
+  color: #aaa;
+}
+
+.close:hover,
+.close-checkout:hover {
+  color: #000;
+}
+
+/* cart items */
+.cart-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px;
+  border-bottom: 1px solid #eee;
+}
+
+.cart-item-info {
+  flex: 1;
+}
+
+.cart-item-name {
+  font-weight: bold;
+  margin-bottom: 5px;;
+}
+
+.cart-item-price {
+  color: green;
+}
+
 
 .hidden {
   display: none !important;
