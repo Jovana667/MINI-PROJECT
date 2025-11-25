@@ -171,17 +171,30 @@ function displayProducts(productsToShow) {
   productsToShow.forEach((product) => {
     // for each product create...
     const productCard = document.createElement("div");
-    productCard.className = "product-card";
-    // create a div with a class name of product-card
+    productCard.className = "card product-card";
+    // create a div with Bootstrap card classes
     productCard.innerHTML = `
-        <div class="product-image">${product.emoji}</div>
-        <h3>${product.name}</h3>
-        <p>${product.description}</p>
-        <div class="product-price">$${product.price.toFixed(2)}</div>
-        <button class="add-to-cart-btn" onclick="addToCart(${product.id})">
-        Add to Cart
-        </button>
+        <div class="card-body">
+          <div class="product-image text-center" style="font-size: 3rem;">${
+            product.emoji
+          }</div>
+          <h5 class="card-title">${product.name}</h5>
+          <p class="card-text">${product.description}</p>
+        </div>
+        <div class="card-footer">
+          <div class="d-flex justify-content-between align-items-center">
+            <span class="product-price fw-bold text-success">$${product.price.toFixed(
+              2
+            )}</span>
+            <button class="btn btn-primary btn-sm" onclick="addToCart(${
+              product.id
+            })">
+              Add to Cart
+            </button>
+          </div>
+        </div>
         `;
+
     // fill it with HTML including product details and an add to cart button
     productsGrid.appendChild(productCard);
   });

@@ -49,6 +49,8 @@ header .container {
   background-color: #c0392b;
 }
 
+
+
 /* Auth Section */
 #authSection {
   padding: 60px 20px;
@@ -87,7 +89,7 @@ header .container {
 }
 
 /* Buttons */
-.btn-primary {
+.btn-custom {
   width: 100%;
   background-color: red;
   color: white;
@@ -99,11 +101,11 @@ header .container {
   transition: background-color 0.3s;
 }
 
-.btn-primary:hover {
+.btn-custom:hover {
   background-color: pink;
 }
 
-.btn-secondary {
+/* .btn-secondary {
   background-color: grey;
   color: white;
   border: none;
@@ -111,7 +113,7 @@ header .container {
   border-radius: 5px;
   cursor: pointer;
   font-size: 14px;
-}
+} */
 
 .btn-secondary:hover {
   background-color: darkgrey;
@@ -122,12 +124,12 @@ header .container {
 main {
   padding: 40px 0;
 }
-
+/* 
 .search-section {
   display: flex;
   gap: 10px;
   margin-bottom: 30px;
-}
+} */
 
 #searchInput {
   flex: 1;
@@ -201,7 +203,7 @@ main {
 
 .add-to-cart-btn:hover {
   background-color: darkgreen;
-} 
+}
 
 /* modal */
 .modal {
@@ -263,7 +265,7 @@ main {
 
 .cart-item-name {
   font-weight: bold;
-  margin-bottom: 5px;;
+  margin-bottom: 5px;
 }
 
 .cart-item-price {
