@@ -1,25 +1,10 @@
-// Sample product data
-const products = [
-  {
-    id: 1,
-    name: "Wireless Headphones",
-    price: 79.99,
-    emoji: "🎧",
-    description: "High-quality wireless headphones",
-  },
-  {
-    id: 2,
-    name: "Smart Watch",
-    price: 199.99,
-    emoji: "⌚",
-    description: "Fitness tracking smart watch",
-  },
-];
+// products will be loaded from backend
+let products = [];
+let allProducts = [];
 
 // App state
 let cart = [];
 let currentUser = null;
-let allProducts = [...products];
 
 // DOM Elements - will be initialized after DOM loads
 let authSection,
@@ -76,17 +61,41 @@ document.addEventListener("DOMContentLoaded", function () {
   completeOrderBtn.addEventListener("click", completeOrder);
 
   // close Modals
-  document.querySelector(".close").addEventListener("click", closeCart);
-  document
-    .querySelector(".close-checkout")
-    .addEventListener("click", closeCheckout);
+  document.querySelectorAll(".close").forEach((btn) => {
+    btn.addEventListener("click", closeCart);
+  });
+  document.querySelectorAll(".close-checkout").forEach((btn) => {
+    btn.addEventListener("click", closeCheckout);
+  });
 
   // Close modal when clicking outside
   window.addEventListener("click", (e) => {
     if (e.target === cartModal) closeCart();
     if (e.target === checkoutModal) closeCheckout();
   });
+
+  // load products from backend
+  loadProductsFromBackend();
 });
+
+// load products from backend
+async function loadProductsFromBackend() {
+  try {
+    console.log("Fetching products from backend...");
+
+    const response = await fetch("/api/products");
+    const data = await response.json();
+
+    console.log("products loaded:", data);
+
+    products = data;
+    allProducts = [...data];
+
+    console.log("Products ready to display after login");
+  } catch (error) {
+    console.error("Error loading products:", error);
+  }
+}
 
 // login handler
 function handleLogin() {
@@ -219,7 +228,7 @@ function handleSearch() {
   const filteredProducts = allProducts.filter(
     (product) =>
       product.name.toLowerCase().includes(searchTerm) ||
-      products.description.toLowerCase().includes(searchTerm)
+      product.description.toLowerCase().includes(searchTerm)
   );
 
   displayProducts(filteredProducts);
