@@ -89,6 +89,27 @@ app.post("/api/login", (req, res) => {
     });
 });
 
+// get users cart
+app.get('/api/cart/:userId', (req, res) => {
+    const userId = req.params.userId;
+
+    db.all(`
+        SELECT cart.id, cart.quantity, products.*
+        FROM cart
+        JOIN products ON cart.products_id = products.id
+        WHERE cart.user_id = ?
+        `, [userId], (err, rows) => {
+            if (err) {
+                console.error('Error fetching cart:', err);
+                res.status(500).json({ error: 'Failed to fetch cart' });
+            } else {
+                res.json(rows);
+            }
+            });
+        });
+
+        // add item to cart
+
 
 // start server
 app.listen(PORT, () => {
