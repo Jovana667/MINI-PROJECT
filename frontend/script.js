@@ -80,22 +80,18 @@ document.addEventListener("DOMContentLoaded", function () {
 
 // load products from backend
 async function loadProductsFromBackend() {
-if (!currentUser) || (!currentUser.id) {
-  console.log('No user logged in');
-  return;
-}
-
   try {
-    const response = await fetch(`/api/cart/${currentUser.id}`);
+    console.log("Fetching products from backend...");
+
+    const response = await fetch("/api/products");
     const data = await response.json();
 
-    console.log ('Cart loaded from database:', data);
-    
-    cart = data;
-    updateCartCount();
+    console.log("Products loaded from backend:", data);
 
+    products = data;
+    allProducts = [...data];
   } catch (error) {
-    console.error('Error loading cart:', error);
+    console.error("Error loading products:", error);
   }
 }
 
@@ -120,9 +116,9 @@ async function handleLogin() {
     const response = await fetch("/api/login", {
       method: "POST",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
-      body: JSON.stringify({ email, password })
+      body: JSON.stringify({ email, password }),
     });
 
     const data = await response.json();
@@ -140,7 +136,7 @@ async function handleLogin() {
       showAuthMessage(data.message, "error");
     }
   } catch (error) {
-    console.error('Login error:', error);
+    console.error("Login error:", error);
     showAuthMessage("Login failed. Please try again.", "error");
   }
 }
@@ -172,7 +168,7 @@ async function handleRegister() {
     const response = await fetch("/api/register", {
       method: "POST",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({ email, password }),
     });
@@ -181,6 +177,7 @@ async function handleRegister() {
 
     if (data.success) {
       currentUser = data.user;
+      console.log("User registered, currentUser:", currentUser);
       showAuthMessage(data.message, "success");
 
       // new user - cart empty
@@ -196,7 +193,7 @@ async function handleRegister() {
       showAuthMessage(data.message, "error");
     }
   } catch (error) {
-    console.error('Registration error:', error);
+    console.error("Registration error:", error);
     showAuthMessage("Registration failed. Please try again.", "error");
   }
 }
@@ -271,8 +268,10 @@ function handleSearch() {
 // add to cart
 async function addToCart(productId) {
   console.log("addToCart called with productId:", productId);
-  
+  console.log("currentUser:", currentUser);
+
   if (!currentUser || !currentUser.id) {
+    console.log("No user logged in or user has no ID");
     showNotification("Please login first!");
     return;
   }
@@ -287,16 +286,16 @@ async function addToCart(productId) {
 
   try {
     // Save to database
-    const response = await fetch('/api/cart', {
-      method: 'POST',
+    const response = await fetch("/api/cart", {
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json'
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({
         userId: currentUser.id,
         productId: productId,
-        quantity: 1
-      })
+        quantity: 1,
+      }),
     });
 
     const data = await response.json();
@@ -318,9 +317,38 @@ async function addToCart(productId) {
       showNotification("Failed to add to cart");
     }
   } catch (error) {
-    console.error('Error adding to cart:', error);
+    console.error("Error adding to cart:", error);
     showNotification("Error adding to cart");
   }
+}
+
+// update cart count
+function updateCartCount() {
+  const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+  cartCount.textContent = totalItems;
+}
+
+// show notification
+function showNotification(message) {
+  const notification = document.createElement("div");
+  notification.style.cssText = `
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: pink;
+    color: black;
+    padding: 15px 25px;
+    border-radius: 5px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    z-index: 2000;
+    animation: slideIn 0.3s ease;
+  `;
+  notification.textContent = message;
+  document.body.appendChild(notification);
+
+  setTimeout(() => {
+    notification.remove();
+  }, 2000);
 }
 
 // open cart modal
@@ -369,6 +397,12 @@ function displayCartItems() {
   updateCartTotal();
 }
 
+// update cart total
+function updateCartTotal() {
+  const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  cartTotal.textContent = total.toFixed(2);
+}
+
 // remove from cart
 async function removeFromCart(productId) {
   if (!currentUser || !currentUser.id) {
@@ -378,7 +412,7 @@ async function removeFromCart(productId) {
   try {
     // Remove from database
     const response = await fetch(`/api/cart/${currentUser.id}/${productId}`, {
-      method: 'DELETE'
+      method: "DELETE",
     });
 
     const data = await response.json();
@@ -396,7 +430,7 @@ async function removeFromCart(productId) {
       displayCartItems();
     }
   } catch (error) {
-    console.error('Error removing from cart:', error);
+    console.error("Error removing from cart:", error);
   }
 }
 
@@ -434,7 +468,7 @@ async function completeOrder() {
     // Clear cart in database
     if (currentUser && currentUser.id) {
       await fetch(`/api/cart/${currentUser.id}`, {
-        method: 'DELETE'
+        method: "DELETE",
       });
     }
 
@@ -455,7 +489,7 @@ async function completeOrder() {
       checkoutMessage.textContent = "";
     }, 2000);
   } catch (error) {
-    console.error('Error completing order:', error);
+    console.error("Error completing order:", error);
     checkoutMessage.textContent = "Order failed. Please try again.";
     checkoutMessage.style.color = "red";
   }
