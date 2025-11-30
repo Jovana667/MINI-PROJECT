@@ -208,6 +208,90 @@ app.delete('/api/cart/:userId', (req, res) => {
   });
 });
 
+// Save order to database
+app.post('/api/orders', (req, res) => {
+  const { userId, total, name, address, items } = req.body;
+  
+  if (!userId || !total || !name || !address) {
+    return res.json({ success: false, message: 'Missing order data' });
+  }
+  
+  // Insert order
+  db.run(`
+    INSERT INTO orders (user_id, total, name, address, status)
+    VALUES (?, ?, ?, ?, 'completed')
+  `, [userId, total, name, address], function(err) {
+    if (err) {
+      console.error('Error saving order:', err);
+      return res.json({ success: false, message: 'Failed to save order' });
+    }
+    
+    console.log('Order saved with ID:', this.lastID);
+    res.json({ 
+      success: true, 
+      message: 'Order saved',
+      orderId: this.lastID 
+    });
+  });
+});
+
+// Get user's order history
+app.get('/api/orders/:userId', (req, res) => {
+  const userId = req.params.userId;
+  
+  db.all(`
+    SELECT * FROM orders 
+    WHERE user_id = ? 
+    ORDER BY created_at DESC
+  `, [userId], (err, rows) => {
+    if (err) {
+      console.error('Error fetching orders:', err);
+      res.status(500).json({ error: 'Failed to fetch orders' });
+    } else {
+      res.json(rows);
+    }
+  });
+});
+
+// Update cart item quantity
+app.put('/api/cart/:cartItemId', (req, res) => {
+  const { quantity } = req.body;
+  const cartItemId = req.params.cartItemId;
+  
+  if (!quantity || quantity < 1) {
+    return res.json({ success: false, message: 'Invalid quantity' });
+  }
+  
+  db.run('UPDATE cart SET quantity = ? WHERE id = ?', 
+    [quantity, cartItemId], (err) => {
+      if (err) {
+        console.error('Error updating cart:', err);
+        return res.json({ success: false, message: 'Failed to update' });
+      }
+      res.json({ success: true, message: 'Quantity updated' });
+    });
+});
+
+// Get products sorted by price or name
+app.get('/api/products/sorted', (req, res) => {
+  const sortBy = req.query.sortBy || 'name'; // 'name' or 'price'
+  const order = req.query.order || 'ASC'; // 'ASC' or 'DESC'
+  
+  // Validate inputs to prevent SQL injection
+  const validSortBy = ['name', 'price'].includes(sortBy) ? sortBy : 'name';
+  const validOrder = ['ASC', 'DESC'].includes(order.toUpperCase()) ? order.toUpperCase() : 'ASC';
+  
+  db.all(`SELECT * FROM products ORDER BY ${validSortBy} ${validOrder}`, [], (err, rows) => {
+    if (err) {
+      console.error('Error fetching sorted products:', err);
+      res.status(500).json({ error: 'Failed to fetch products' });
+    } else {
+      res.json(rows);
+    }
+  });
+});
+
+
 // start server
 app.listen(PORT, () => {
   console.log(`Server is running at http://localhost:${PORT}`);
