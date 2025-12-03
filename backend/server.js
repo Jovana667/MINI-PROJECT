@@ -1,18 +1,21 @@
-// Import Express
 const express = require("express");
 const path = require("path");
 const db = require("./database");
-const app = express();
-const bcrypt = require("bcrypt");
+const bcrypt = require('bcrypt');
 const fetch = require('node-fetch');
+const cors = require('cors');  // ← ADD THIS
+const app = express();
 const PORT = 3000;
+
+// Enable CORS
+app.use(cors());  // ← ADD THIS
+console.log('CORS enabled');
 
 // middleware to parse JSON
 app.use(express.json());
 
 // server frontend folder
 app.use(express.static(path.join(__dirname, "../frontend")));
-
 // ========== ADD THIS: CORS headers ==========
 app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*');
