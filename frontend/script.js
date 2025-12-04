@@ -81,24 +81,22 @@ document.addEventListener("DOMContentLoaded", function () {
     if (e.target === checkoutModal) closeCheckout();
   });
 
+  // load products from backend
+  async function loadProductsFromBackend() {
+    try {
+      console.log("Fetching products from backend...");
 
+      const response = await fetch("/api/products");
+      const data = await response.json();
 
-// load products from backend
-async function loadProductsFromBackend() {
-  try {
-    console.log("Fetching products from backend...");
+      console.log("Products loaded from backend:", data);
 
-    const response = await fetch("/api/products");
-    const data = await response.json();
-
-    console.log("Products loaded from backend:", data);
-
-    products = data;
-    allProducts = [...data];
-  } catch (error) {
-    console.error("Error loading products:", error);
+      products = data;
+      allProducts = [...data];
+    } catch (error) {
+      console.error("Error loading products:", error);
+    }
   }
-}
 
   loadProductsFromBackend();
 });
@@ -139,7 +137,7 @@ async function handleLogin() {
         authSection.classList.add("hidden");
         shopSection.classList.remove("hidden");
         console.log("Displaying products, allProducts:", allProducts);
-        displayProducts(allProducts);
+        displayProducts(products);
       }, 1000);
     } else {
       showAuthMessage(data.message, "error");
@@ -222,24 +220,24 @@ async function displayProducts(productsToShow) {
     // Create product card
     const productCard = document.createElement("div");
     productCard.className = "card product-card";
-    
+
     // Start with emoji as default
     let imageHtml = `<div class="product-image text-center">${product.emoji}</div>`;
-    
+
     // Try to fetch product image from Unsplash
     try {
       const imgResponse = await fetch(`/api/product-image/${product.name}`);
       const imgData = await imgResponse.json();
-      
+
       if (imgData.imageUrl) {
         // Use real image if available
         imageHtml = `<img src="${imgData.imageUrl}" alt="${product.name}" class="product-image-photo" />`;
       }
     } catch (error) {
-      console.error('Error fetching image:', error);
+      console.error("Error fetching image:", error);
       // Keep emoji if image fails
     }
-    
+
     // Build card HTML
     productCard.innerHTML = `
         <div class="card-body">
@@ -249,8 +247,12 @@ async function displayProducts(productsToShow) {
         </div>
         <div class="card-footer">
           <div class="d-flex justify-content-between align-items-center">
-            <span class="product-price fw-bold text-success">$${product.price.toFixed(2)}</span>
-            <button class="btn btn-primary btn-sm" onclick="addToCart(${product.id})">
+            <span class="product-price fw-bold text-success">$${product.price.toFixed(
+              2
+            )}</span>
+            <button class="btn btn-primary btn-sm" onclick="addToCart(${
+              product.id
+            })">
               Add to Cart
             </button>
           </div>
@@ -262,7 +264,8 @@ async function displayProducts(productsToShow) {
 
   // Show message if no products
   if (productsToShow.length === 0) {
-    productsGrid.innerHTML = '<p style="grid-column:1/-1; text-align: center; padding:40px;">No products found.</p>';
+    productsGrid.innerHTML =
+      '<p style="grid-column:1/-1; text-align: center; padding:40px;">No products found.</p>';
   }
 }
 
@@ -311,7 +314,7 @@ async function addToCart(productId) {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        userId: currentUser.id,
+        userId: currentUser.Id,
         productId: productId,
         quantity: 1,
       }),
@@ -428,7 +431,7 @@ function displayCartItems() {
 
 // update cart total
 function updateCartTotal() {
-  const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  const total = cart.reduce((sum, item) => sum + item.price * item.quantity);
   cartTotal.textContent = total.toFixed(2);
 }
 
