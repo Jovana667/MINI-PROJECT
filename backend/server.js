@@ -1,29 +1,21 @@
 const express = require("express");
 const path = require("path");
 const db = require("./database");
-const bcrypt = require('bcrypt');
-const fetch = require('node-fetch');
-const cors = require('cors');  // ← ADD THIS
+const bcrypt = require("bcrypt");
+const fetch = require("node-fetch");
+const cors = require("cors"); // ← ADD THIS
 const app = express();
 const PORT = 3000;
 
 // Enable CORS
-app.use(cors());  // ← ADD THIS
-console.log('CORS enabled');
+app.use(cors());
+console.log("CORS enabled");
 
 // middleware to parse JSON
 app.use(express.json());
 
 // server frontend folder
 app.use(express.static(path.join(__dirname, "../frontend")));
-// ========== ADD THIS: CORS headers ==========
-app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', '*');
-  res.header('Access-Control-Allow-Headers', 'Content-Type');
-  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
-  next();
-});
-
 
 // routes
 // get all products from database
@@ -179,7 +171,7 @@ app.post("/api/cart", (req, res) => {
   const { userId, productId, quantity } = req.body;
 
   if (!userId || !productId) {
-    return resizeTo.json({ success: false, message: "Missing data" });
+    return res.json({ success: false, message: "Missing data" });
   }
 
   // check if item already in cart
@@ -363,19 +355,19 @@ app.get("/api/products/sorted", (req, res) => {
 });
 
 // Get product image from Unsplash
-app.get('/api/product-image/:productName', async (req, res) => {
+app.get("/api/product-image/:productName", async (req, res) => {
   const productName = req.params.productName;
-  const accessKey = 'XdU2APzTQgIpSbddfHZxAz7_34cDjEXfvF_hiN0d6NE'; // REPLACE WITH YOUR KEY!
-  
+  const accessKey = "XdU2APzTQgIpSbddfHZxAz7_34cDjEXfvF_hiN0d6NE"; // REPLACE WITH YOUR KEY!
+
   try {
     console.log(`Fetching image for: ${productName}`);
-    
+
     const response = await fetch(
       `https://api.unsplash.com/search/photos?query=${productName}&per_page=1&client_id=${accessKey}`
     );
-    
+
     const data = await response.json();
-    
+
     if (data.results && data.results.length > 0) {
       const imageUrl = data.results[0].urls.regular; // Get high-quality image
       console.log(`Image found: ${imageUrl}`);
@@ -385,11 +377,10 @@ app.get('/api/product-image/:productName', async (req, res) => {
       res.json({ imageUrl: null });
     }
   } catch (error) {
-    console.error('Unsplash API error:', error);
-    res.status(500).json({ error: 'Failed to fetch image' });
+    console.error("Unsplash API error:", error);
+    res.status(500).json({ error: "Failed to fetch image" });
   }
 });
-
 
 // start server
 app.listen(PORT, () => {
