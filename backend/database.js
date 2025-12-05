@@ -116,15 +116,64 @@ function insertSampleProducts() {
           name: "Wireless Headphones",
           price: 79.99,
           emoji: "🎧",
-          description: "High-quality wireless headphones",
+          description: "High-quality wireless headphones with noise cancellation",
         },
         {
           name: "Laptop",
           price: 899.99,
           emoji: "💻",
-          description: "Powerful and portable laptop",
+          description: "Powerful laptop for work and gaming",
         },
+        {
+          name: "Smartphone",
+          price: 699.99,
+          emoji: "📱",
+          description: "Latest model with amazing camera",
+        },
+        {
+          name: "Smartwatch",
+          price: 299.99,
+          emoji: "⌚",
+          description: "Track your fitness and stay connected",
+        },
+        {
+          name: "Tablet",
+          price: 449.99,
+          emoji: "📱",
+          description: "Perfect for reading and entertainment",
+        },
+        {
+          name: "Keyboard",
+          price: 129.99,
+          emoji: "⌨️",
+          description: "Mechanical keyboard for better typing",
+        },
+        {
+          name: "Mouse",
+          price: 59.99,
+          emoji: "🖱️",
+          description: "Ergonomic wireless mouse",
+        },
+        {
+          name: "Monitor",
+          price: 349.99,
+          emoji: "🖥️",
+          description: "27-inch 4K display",
+        },
+        {
+          name: "Webcam",
+          price: 89.99,
+          emoji: "📷",
+          description: "HD webcam for video calls",
+        },
+        {
+          name: "Speakers",
+          price: 149.99,
+          emoji: "🔊",
+          description: "Bluetooth speakers with great sound",
+        }
       ];
+
 
       const stmt = db.prepare(
         "INSERT INTO products(name, price, emoji, description) VALUES (?, ?, ?, ?)"
