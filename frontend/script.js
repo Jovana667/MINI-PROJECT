@@ -10,6 +10,7 @@ let currentUser = null;
 let authSection,
   shopSection,
   loginBtn,
+  logoutBtn,
   registerBtn,
   emailInput,
   passwordInput,
@@ -25,6 +26,7 @@ document.addEventListener("DOMContentLoaded", function () {
   authSection = document.getElementById("authSection");
   shopSection = document.getElementById("shopSection");
   loginBtn = document.getElementById("loginBtn");
+  logoutBtn = document.getElementById("logoutBtn");
   registerBtn = document.getElementById("registerBtn");
   emailInput = document.getElementById("emailInput");
   passwordInput = document.getElementById("passwordInput");
@@ -47,6 +49,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // event listeners
   loginBtn.addEventListener("click", handleLogin);
+  logoutBtn.addEventListener("click", handleLogout);
   registerBtn.addEventListener("click", handleRegister);
   backToShopBtn.addEventListener("click", backToShop);
   viewOrdersBtn.addEventListener("click", viewOrders);
@@ -208,6 +211,32 @@ async function handleRegister() {
 function showAuthMessage(message, type) {
   authMessage.textContent = message;
   authMessage.style.color = type === "success" ? "green" : "red";
+}
+
+// log out handler
+
+function handleLogout() {
+  console.log("Logout button clicked!");
+
+  currentUser = null;
+  setTimeout(() => {
+    authMessage.textContent = "Logged out successfully";
+  }, 1000);
+  // clear cart on logout
+  cart = [];
+  products = [];
+  allProducts = [];
+  updateCartCount();
+
+  // clear inputs
+  emailInput.value = "";
+  passwordInput.value = "";
+
+  setTimeout(() => {
+    ordersSection.classList.add("hidden");
+    authSection.classList.remove("hidden");
+    shopSection.classList.add("hidden");
+  }, 1000);
 }
 
 // Display products
