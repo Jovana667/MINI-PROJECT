@@ -108,6 +108,16 @@ document.addEventListener("DOMContentLoaded", function () {
 
       products = data;
       allProducts = [...data];
+
+      // After products load, check if user should stay logged in
+      const savedUser = localStorage.getItem("currentUser");
+      if (savedUser) {
+        currentUser = JSON.parse(savedUser);
+        // Show shop instead of login
+        authSection.classList.add("hidden");
+        shopSection.classList.remove("hidden");
+        displayProducts(products);
+      }
     } catch (error) {
       console.error("Error loading products:", error);
     }
@@ -146,6 +156,7 @@ async function handleLogin() {
 
     if (data.success) {
       currentUser = data.user;
+      localStorage.setItem("currentUser", JSON.stringify(data.user)); // ← ADD THIS //
       showAuthMessage(data.message, "success");
 
       setTimeout(() => {
@@ -199,6 +210,7 @@ async function handleRegister() {
 
     if (data.success) {
       currentUser = data.user;
+      localStorage.setItem("currentUser", JSON.stringify(data.user));
       console.log("User registered, currentUser:", currentUser);
       showAuthMessage(data.message, "success");
 
@@ -610,6 +622,13 @@ async function openCheckout() {
   }
 
   try {
+    // Save cart and user to localStorage before redirect (so we can save order after payment)
+    localStorage.setItem('pendingOrder', JSON.stringify({
+      cart: cart,
+      userId: currentUser.id,
+      total: cart.reduce((sum, item) => sum + item.price * item.quantity, 0)
+    }));
+    
     // Call backend to create Stripe checkout session
     const response = await fetch(
       "http://localhost:3000/api/create-checkout-session",

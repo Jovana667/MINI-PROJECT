@@ -84,5 +84,43 @@
         <a href="/" class="btn btn-home">Return to Shop</a>
       </div>
     </div>
+
+    <script>
+      // Save order to database when returning from Stripe
+      async function saveOrderFromStripe() {
+        const pendingOrder = localStorage.getItem("pendingOrder");
+
+        if (pendingOrder) {
+          const orderData = JSON.parse(pendingOrder);
+
+          try {
+            const response = await fetch("http://localhost:3000/api/orders", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                userId: orderData.userId,
+                total: orderData.total,
+                name: "Stripe Customer", // Placeholder - Stripe doesn't give us this
+                address: "Paid via Stripe", // Placeholder
+                items: orderData.cart,
+              }),
+            });
+
+            const data = await response.json();
+            console.log("Order saved:", data);
+
+            // Clear pending order and cart from localStorage
+            localStorage.removeItem("pendingOrder");
+          } catch (error) {
+            console.error("Error saving order:", error);
+          }
+        }
+      }
+
+      // Save order when page loads
+      saveOrderFromStripe();
+    </script>
   </body>
 </html>
